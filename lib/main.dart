@@ -17,13 +17,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return Container(
       child: MaterialApp(
         title: 'Flutter Demo',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          // brightness: Brightness.dark,
-          backgroundColor: ColorConstants.ColorPrimary,
           useMaterial3: true,
         ),
         home: Homepage(),

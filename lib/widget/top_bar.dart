@@ -10,27 +10,37 @@ class TopBarBuild extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 20.0),
-      width: double.infinity,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(40),
-          bottomRight: Radius.circular(40),
-        ),
-      ),
+      // width: double.infinity,
+      // padding: EdgeInsets.symmetric(horizontal: 12, vertical: 15.0),
+      // decoration: BoxDecoration(
+      //   color: Colors.deepPurple,
+      // ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Icon(Icons.sunny),
+          Row(
+            children: [
+              Image.asset(
+                "assets/images/menu.png",
+                color: Colors.white,
+              ),
+              SizedBox(width: 8.0),
+              Text(
+                "Task Todo",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
           Row(
             children: [
               CalendarBuild(),
               SizedBox(width: 10),
-              CircleAvatar(
-                foregroundColor: Colors.red,
-                backgroundColor: Colors.red,
-              )
+              CreateTodoList(),
             ],
           )
         ],

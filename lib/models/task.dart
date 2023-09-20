@@ -1,49 +1,38 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class TaskModel {
-  String? id;
-  String? title;
-  String? note;
-  String? dateTime;
-  String? toLocation;
-  int? amount;
-  String? status;
-  String? paymentMethod;
-  String? deliveryType;
+  final String id;
+  final String title;
+  // final DateTime dateTime;
+  String dateTime;
+  final double amount;
+  final String status;
+  final String paymentMethod;
+  final String deliveryType;
+  final String toLocation;
 
-  TaskModel(
-      {this.id,
-      this.title,
-      this.toLocation,
-      this.dateTime,
-      this.amount,
-      this.status,
-      this.paymentMethod,
-      this.deliveryType});
+  TaskModel({
+    required this.id,
+    required this.title,
+    required this.dateTime,
+    required this.amount,
+    required this.status,
+    required this.paymentMethod,
+    required this.deliveryType,
+    required this.toLocation,
+  });
 
-  factory TaskModel.fromSnapshot(DocumentSnapshot snap) {
-    var snapshot = snap.data() as Map<String, dynamic>;
-
+  factory TaskModel.fromFirestore(DocumentSnapshot doc) {
+    Map data = doc.data() as Map;
     return TaskModel(
-      id: snapshot['id'],
-      title: snapshot['title'],
-      dateTime: snapshot['dateTime'],
-      amount: snapshot['amount'],
-      status: snapshot['status'],
-      paymentMethod: snapshot['paymentMethod'],
-      deliveryType: snapshot['deliveryType'],
-      toLocation: snapshot['toLocation'],
+      id: doc.id,
+      title: data['title'],
+      dateTime: data['dateTime'],
+      amount: data['amount'],
+      status: data['status'],
+      paymentMethod: data['paymentMethod'],
+      deliveryType: data['deliveryType'],
+      toLocation: data['toLocation'],
     );
   }
-
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "title": title,
-        "dateTime": dateTime,
-        "amount": amount,
-        "status": status,
-        "paymentMethod": paymentMethod,
-        "deliveryType": deliveryType,
-        "toLocation": toLocation
-      };
 }

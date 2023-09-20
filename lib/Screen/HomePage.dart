@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:todo_app_list/src/config/color_constants.dart';
+import 'package:todo_app_list/widget/card.dart';
 import 'package:todo_app_list/widget/create_list.dart';
+import 'package:todo_app_list/widget/search_widget_build.dart';
 import 'package:todo_app_list/widget/task_card_list.dart';
 import 'package:todo_app_list/widget/top_bar.dart';
 
@@ -16,54 +18,62 @@ class Homepage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  // height: 20,
-                  child: TopBarBuild(),
-                ),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        child: Text(
-                          DateFormat.yMEd().format(DateTime.now()),
-                          style: TextStyle(
-                              fontSize: 24, fontWeight: FontWeight.w600),
-                        ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                color: Colors.grey.shade300.withOpacity(0.5),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: double.infinity,
+                      // height: MediaQuery.of(context).size.height * 0.2,
+                      height: 180,
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 12, vertical: 15.0),
+                      decoration: BoxDecoration(
+                        color: Colors.deepPurple,
                       ),
-                      // create new task
-                      CreateTodoList(),
-                    ],
-                  ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          TopBarBuild(),
+                          SizedBox(height: 20),
+                          SearchWidgetBuild(),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    Column(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.symmetric(vertical: 10),
+                          child: Center(
+                            child: Text(
+                              "Today",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: ColorConstants.primary,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          height: 500,
+                          margin: EdgeInsets.symmetric(vertical: 12),
+                          child: CardWidgetBuild(),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-                SizedBox(height: 8.0),
-                Container(
-                  height: MediaQuery.of(context).size.height * 1,
-                  padding: EdgeInsets.only(bottom: 100),
-                  child: TaskCardListToDobuild(),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
-        bottomNavigationBar: ConvexAppBar(
-          backgroundColor: ColorConstants.primaryDark,
-          color: Colors.white,
-          items: [
-            TabItem(icon: Icons.home, title: 'Home'),
-            TabItem(icon: Icons.map, title: 'Discovery'),
-            TabItem(icon: Icons.add, title: 'Add'),
-            TabItem(icon: Icons.message, title: 'Message'),
-            TabItem(icon: Icons.people, title: 'Profile'),
-          ],
-          onTap: (int i) => Homepage(),
-        ));
+      ),
+    );
   }
 }
