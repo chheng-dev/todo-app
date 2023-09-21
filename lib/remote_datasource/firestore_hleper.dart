@@ -21,6 +21,28 @@ class FirestoreHelper {
     await taskCollectionRef.doc(taskID).delete();
   }
 
+  Future<void> updateTask(TaskModel taskModel) async {
+    await taskCollectionRef.doc(taskModel.id).update({
+      'title': taskModel.title,
+      'dateTime': taskModel.dateTime,
+      'amount': taskModel.amount,
+      'status': taskModel.status,
+      'paymentMethod': taskModel.paymentMethod,
+      'deliveryType': taskModel.deliveryType,
+      'toLocation': taskModel.toLocation,
+    });
+  }
+
+  Stream<List<TaskModel>> searchTasks(String query) {
+    return FirebaseFirestore.instance
+        .collection("task")
+        .where("title", isGreaterThanOrEqualTo: query)
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((doc) => TaskModel.fromFirestore(doc)).toList();
+    });
+  }
+
   Stream<List<TaskModel>> getTaskList() {
     return taskCollectionRef.snapshots().map((snapshot) {
       return snapshot.docs.map((doc) => TaskModel.fromFirestore(doc)).toList();

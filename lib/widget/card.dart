@@ -7,10 +7,15 @@ import 'package:intl/intl.dart';
 import 'package:todo_app_list/models/task.dart';
 import 'package:todo_app_list/remote_datasource/firestore_hleper.dart';
 import 'package:todo_app_list/src/config/color_constants.dart';
+import 'package:todo_app_list/widget/create_list.dart';
+import 'package:todo_app_list/widget/edit_tak.dart';
 
 class CardWidgetBuild extends StatefulWidget {
+  final Stream<List<TaskModel>> tasksStream;
+
   const CardWidgetBuild({
     Key? key,
+    required this.tasksStream,
   }) : super(key: key);
 
   @override
@@ -56,7 +61,7 @@ class _CardWidgetBuildState extends State<CardWidgetBuild> {
     final FirestoreHelper taskCrudHelper = FirestoreHelper();
 
     return StreamBuilder<List<TaskModel>>(
-      stream: taskCrudHelper.getTaskList(),
+      stream: widget.tasksStream,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(
@@ -84,7 +89,7 @@ class _CardWidgetBuildState extends State<CardWidgetBuild> {
                 },
                 confirmDismiss: (DismissDirection direction) async {
                   if (direction == DismissDirection.startToEnd) {
-                    return false;
+                    () => CreateTodoList();
                   } else {
                     return Future.delayed(Duration(seconds: 1),
                         () => direction == DismissDirection.endToStart);
@@ -147,6 +152,12 @@ class _CardWidgetBuildState extends State<CardWidgetBuild> {
                             child: Checkbox(
                               onChanged: (value) {},
                               value: _isChecked,
+                            ),
+                          ),
+                          Container(
+                            padding: EdgeInsets.only(right: 10),
+                            child: EditTodoList(
+                              task: task[index],
                             ),
                           ),
                         ],

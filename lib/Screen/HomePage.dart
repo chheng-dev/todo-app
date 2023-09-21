@@ -2,6 +2,8 @@ import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:todo_app_list/models/task.dart';
+import 'package:todo_app_list/remote_datasource/firestore_hleper.dart';
 import 'package:todo_app_list/src/config/color_constants.dart';
 import 'package:todo_app_list/widget/card.dart';
 import 'package:todo_app_list/widget/create_list.dart';
@@ -13,8 +15,16 @@ void main() {
   runApp(const Homepage());
 }
 
-class Homepage extends StatelessWidget {
+class Homepage extends StatefulWidget {
   const Homepage({super.key});
+
+  @override
+  State<Homepage> createState() => _HomepageState();
+}
+
+class _HomepageState extends State<Homepage> {
+  String _searchQuery = '';
+  Stream<List<TaskModel>> _filterTaskStream = FirestoreHelper().getTaskList();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,7 +51,37 @@ class Homepage extends StatelessWidget {
                         children: [
                           TopBarBuild(),
                           SizedBox(height: 20),
-                          SearchWidgetBuild(),
+                          // SearchWidgetBuild(),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Container(
+                                color: Colors.white,
+                                width: double.infinity,
+                                child: TextField(
+                                  onChanged: (query) {
+                                    setState(() {
+                                      _searchQuery = query;
+                                      _filterTaskStream = FirestoreHelper()
+                                          .searchTasks(_searchQuery);
+                                    });
+                                  },
+                                  decoration: InputDecoration(
+                                    contentPadding:
+                                        EdgeInsets.symmetric(horizontal: 12),
+                                    labelText: "ស្វែងរក....",
+                                    enabledBorder: InputBorder.none,
+                                    focusedBorder: InputBorder.none,
+                                    suffixIcon: Icon(
+                                      Icons.search,
+                                      color: ColorConstants.primary,
+                                    ),
+                                    border: InputBorder.none,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )
                         ],
                       ),
                     ),
@@ -63,7 +103,9 @@ class Homepage extends StatelessWidget {
                         Container(
                           height: 500,
                           margin: EdgeInsets.symmetric(vertical: 12),
-                          child: CardWidgetBuild(),
+                          child: CardWidgetBuild(
+                            tasksStream: _filterTaskStream,
+                          ),
                         ),
                       ],
                     ),

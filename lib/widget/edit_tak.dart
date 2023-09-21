@@ -1,26 +1,78 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import 'package:todo_app_list/models/task.dart';
 import 'package:todo_app_list/remote_datasource/firestore_hleper.dart';
 import 'package:todo_app_list/src/config/color_constants.dart';
 import 'package:todo_app_list/widget/text_field.dart';
 
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  runApp(const CreateTodoList());
-}
-
-class CreateTodoList extends StatefulWidget {
-  const CreateTodoList({super.key});
+class EditTodoList extends StatefulWidget {
+  const EditTodoList({
+    Key? key,
+    required this.task,
+  }) : super(key: key);
+  final TaskModel task;
 
   @override
-  State<CreateTodoList> createState() => _CreateTodoListState();
+  State<EditTodoList> createState() => _EditTodoListState();
 }
 
-class _CreateTodoListState extends State<CreateTodoList> {
+class _EditTodoListState extends State<EditTodoList> {
   final FirestoreHelper taskCrudHelper = FirestoreHelper();
+  late TextEditingController _titleController;
+  late TextEditingController _toLocationController;
+  late TextEditingController _amountController;
+  late TextEditingController _selectedDateTime;
+
+  String _selectedDeliveryType = 'Grab'; // Default delivery
+  String _selectedStatus = 'កំពុងដំណើរការ';
+  String _selectedPaymethdOpetion = 'សាច់ប្រាក់';
+
+  @override
+  void initState() {
+    super.initState();
+    _titleController = TextEditingController(text: widget.task.title);
+    _toLocationController = TextEditingController(text: widget.task.toLocation);
+    _amountController =
+        TextEditingController(text: widget.task.amount.toString());
+    _selectedDateTime = TextEditingController(text: widget.task.dateTime);
+
+    //convert amount double to string
+
+    // edit delivery type
+    if (widget.task.deliveryType == 'Grab') {
+      _selectedDeliveryType = "Grab";
+    } else if (widget.task.deliveryType == 'Virakbuntham') {
+      _selectedDeliveryType = "Virakbuntham";
+    } else if (widget.task.deliveryType == "CE Express") {
+      _selectedDeliveryType = "CE Express";
+    } else {
+      _selectedDeliveryType = "J&T";
+    }
+
+    //show status
+    if (widget.task.status == 'កំពុងដំណើរការ') {
+      _selectedStatus = 'កំពុងដំណើរការ';
+    } else if (widget.task.status == 'ជោគជ័យ') {
+      _selectedStatus = 'ជោគជ័យ';
+    } else if (widget.task.status == 'បោះបង់') {
+      _selectedStatus = 'បោះបង់';
+    }
+
+    //  items: ["សាច់ប្រាក់", "ABA Bank", "ACLEDA","Wing","KHQR"]
+    // payment method
+    if (widget.task.paymentMethod == 'សាច់ប្រាក់') {
+      _selectedPaymethdOpetion = 'សាច់ប្រាក់';
+    } else if (widget.task.status == 'ABA Bank') {
+      _selectedPaymethdOpetion = 'ABA Bank';
+    } else if (widget.task.status == 'ACLEDA') {
+      _selectedPaymethdOpetion = 'ACLEDA';
+    } else if (widget.task.status == 'Wing') {
+      _selectedPaymethdOpetion = 'Wing';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,9 +83,7 @@ class _CreateTodoListState extends State<CreateTodoList> {
             child: InkWell(
               onTap: () => ShowModalBottom(context),
               child: Icon(
-                Icons.add,
-                color: Colors.white,
-                size: 30,
+                Icons.edit_note,
               ),
             ),
           ),
@@ -43,18 +93,6 @@ class _CreateTodoListState extends State<CreateTodoList> {
   }
 
   Future ShowModalBottom(context) {
-    TextEditingController _titleController = TextEditingController();
-    TextEditingController _noteController = TextEditingController();
-    TextEditingController _datetimeController = TextEditingController();
-    TextEditingController _toLocationController = TextEditingController();
-    TextEditingController _statusController = TextEditingController();
-    TextEditingController _paymentMethodController = TextEditingController();
-    TextEditingController _deliveryController = TextEditingController();
-    String _statusOption = "ជោគជ័យ";
-    String _paymentMethod = "សាច់ប្រាក់";
-    String _deliveryType = "Grab";
-    final TextEditingController _amountController = TextEditingController();
-
     return showModalBottomSheet(
       isScrollControlled: true,
       isDismissible: false,
@@ -66,10 +104,10 @@ class _CreateTodoListState extends State<CreateTodoList> {
               bottom: MediaQuery.of(context).viewInsets.bottom,
             ),
             child: Container(
+              height: MediaQuery.sizeOf(context).height * 0.8,
               width: double.infinity,
               color: Colors.white,
               padding: EdgeInsets.symmetric(horizontal: 12),
-              height: MediaQuery.sizeOf(context).height * 0.8,
               child: Column(
                 children: [
                   Container(
@@ -80,7 +118,7 @@ class _CreateTodoListState extends State<CreateTodoList> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "Create New Task",
+                          "Edit Task",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 22,
@@ -110,7 +148,7 @@ class _CreateTodoListState extends State<CreateTodoList> {
                     suffixIcon: Icon(Icons.abc),
                   ),
                   SizedBox(height: 8.0),
-                  //delivery Type
+                  // //delivery Type
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -129,7 +167,7 @@ class _CreateTodoListState extends State<CreateTodoList> {
                           fillColor: Colors.grey.shade200,
                         ),
                         dropdownColor: Colors.white,
-                        value: _deliveryType,
+                        value: _selectedDeliveryType,
                         items: ["CE Express", "Virakbuntham", "Grab", "J&T"]
                             .map((String value) {
                           return DropdownMenuItem<String>(
@@ -139,7 +177,7 @@ class _CreateTodoListState extends State<CreateTodoList> {
                         }).toList(),
                         onChanged: (String? value) {
                           setState(() {
-                            _deliveryType = value!;
+                            _selectedDeliveryType = value!;
                           });
                         },
                       ),
@@ -158,6 +196,7 @@ class _CreateTodoListState extends State<CreateTodoList> {
                     children: [
                       Expanded(
                         child: TextFielddBuild(
+                          //  keyboardType: TextInputType.number,
                           txtLable: "តម្លៃ",
                           readOnly: false,
                           hitText: "បញ្ចូលតម្លៃ",
@@ -187,7 +226,7 @@ class _CreateTodoListState extends State<CreateTodoList> {
                                 fillColor: Colors.grey.shade200,
                               ),
                               dropdownColor: Colors.white,
-                              value: _statusOption,
+                              value: _selectedStatus,
                               items: ["ជោគជ័យ", "កំពុងដំណើរការ", "បោះបង់"]
                                   .map((String value) {
                                 return DropdownMenuItem<String>(
@@ -197,10 +236,9 @@ class _CreateTodoListState extends State<CreateTodoList> {
                               }).toList(),
                               onChanged: (String? value) {
                                 setState(() {
-                                  _statusOption = value!;
+                                  _selectedStatus = value!;
                                 });
                               },
-                              // decoration: InputDecoration(labelText: 'Gender'),
                             ),
                           ],
                         ),
@@ -231,11 +269,12 @@ class _CreateTodoListState extends State<CreateTodoList> {
                                 fillColor: Colors.grey.shade200,
                               ),
                               dropdownColor: Colors.white,
-                              value: _paymentMethod,
+                              value: _selectedPaymethdOpetion,
                               items: [
                                 "សាច់ប្រាក់",
                                 "ABA Bank",
                                 "ACLEDA",
+                                "Wing",
                                 "KHQR"
                               ].map((String value) {
                                 return DropdownMenuItem<String>(
@@ -245,7 +284,7 @@ class _CreateTodoListState extends State<CreateTodoList> {
                               }).toList(),
                               onChanged: (String? value) {
                                 setState(() {
-                                  _paymentMethod = value!;
+                                  _selectedPaymethdOpetion = value!;
                                 });
                               },
                             ),
@@ -276,7 +315,7 @@ class _CreateTodoListState extends State<CreateTodoList> {
                                 children: [
                                   Expanded(
                                     child: TextField(
-                                      controller: _datetimeController,
+                                      controller: _selectedDateTime,
                                       decoration: InputDecoration(
                                         enabledBorder: InputBorder.none,
                                         focusedBorder: InputBorder.none,
@@ -295,7 +334,7 @@ class _CreateTodoListState extends State<CreateTodoList> {
                                         lastDate: DateTime(2100),
                                       );
                                       if (selectedDate != null) {
-                                        _datetimeController.text =
+                                        _selectedDateTime.text =
                                             DateFormat.yMd()
                                                 .format(selectedDate);
                                       }
@@ -318,25 +357,19 @@ class _CreateTodoListState extends State<CreateTodoList> {
                         Expanded(
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              foregroundColor: ColorConstants.primaryDark,
+                              foregroundColor: ColorConstants.primary,
                               backgroundColor: Colors.white,
                               elevation: 0,
                               side: BorderSide(
-                                color: Colors.blue.shade800,
+                                color: ColorConstants.primary,
                               ),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8),
                               ),
                             ),
-                            child: Text("បោះបង់"),
+                            child: Text("ត្រលប់"),
                             onPressed: () {
-                              _titleController.clear();
-                              _noteController.clear();
-                              _datetimeController.clear();
-                              _statusController.clear();
-                              // amoutController.clear();
-                              _paymentMethodController.clear();
-                              _deliveryController.clear();
+                              Navigator.pop(context);
                             },
                           ),
                         ),
@@ -345,46 +378,42 @@ class _CreateTodoListState extends State<CreateTodoList> {
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               foregroundColor: Colors.white,
-                              backgroundColor: ColorConstants.primaryDark,
+                              backgroundColor: ColorConstants.primary,
                               elevation: 0,
                               side: BorderSide(
-                                color: Colors.blue.shade800,
+                                color: ColorConstants.primary,
                               ),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8),
                               ),
                             ),
-                            child: const Text("បន្ថែម"),
+                            child: const Text("Update"),
                             onPressed: () async {
                               double amount =
                                   double.tryParse(_amountController.text) ??
-                                      0.0; // Parse double or default to 0.0
+                                      0.0;
 
-                              if (_titleController.text != "" ||
-                                  _statusController.text != "" ||
-                                  _toLocationController.text != "" ||
-                                  _datetimeController.text != "") {
-                                TaskModel newTask = TaskModel(
-                                  id: '', // Firestore will generate an ID
-                                  title: _titleController.text,
-                                  dateTime: _datetimeController.text,
-                                  amount: amount,
-                                  status: _statusOption,
-                                  paymentMethod: _paymentMethod,
-                                  deliveryType: _deliveryType,
-                                  toLocation: _toLocationController.text,
-                                );
-                                taskCrudHelper.addTask(newTask);
-                                _titleController.clear();
-                                _datetimeController.clear();
-                                _statusController.clear();
-                                amount = amount;
-                                _deliveryController.clear();
-                                Navigator.pop(context);
-                              } else {
-                                // ShowAlert
-                                // Alert(message: "Hello world").show();
-                              }
+                              // if (_titleController.text != "" ||
+                              //     _statusController.text != "" ||
+                              //     _toLocationController.text != "" ||
+                              //     _selectedDateTime.text != "") {
+                              TaskModel updateTask = TaskModel(
+                                id: widget
+                                    .task.id, // Firestore will generate an ID
+                                title: _titleController.text,
+                                dateTime: _selectedDateTime.text,
+                                amount: amount,
+                                status: _selectedStatus,
+                                paymentMethod: _selectedPaymethdOpetion,
+                                deliveryType: _selectedDeliveryType,
+                                toLocation: _toLocationController.text,
+                              );
+                              taskCrudHelper.updateTask(updateTask);
+                              Navigator.pop(context);
+                              // } else {
+                              //   // ShowAlert
+                              //   // Alert(message: "Hello world").show();
+                              // }
                             },
                           ),
                         ),
