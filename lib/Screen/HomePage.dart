@@ -45,6 +45,10 @@ class _HomepageState extends State<Homepage> {
                           EdgeInsets.symmetric(horizontal: 12, vertical: 15.0),
                       decoration: BoxDecoration(
                         color: Colors.deepPurple,
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(38),
+                          bottomRight: Radius.circular(38),
+                        ),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,

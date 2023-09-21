@@ -10,6 +10,7 @@ class TaskModel {
   final String paymentMethod;
   final String deliveryType;
   final String toLocation;
+  final bool? isCompleted;
 
   TaskModel({
     required this.id,
@@ -20,6 +21,7 @@ class TaskModel {
     required this.paymentMethod,
     required this.deliveryType,
     required this.toLocation,
+    this.isCompleted,
   });
 
   factory TaskModel.fromFirestore(DocumentSnapshot doc) {
@@ -33,6 +35,7 @@ class TaskModel {
       paymentMethod: data['paymentMethod'],
       deliveryType: data['deliveryType'],
       toLocation: data['toLocation'],
+      isCompleted: data['isCompleted'],
     );
   }
 }

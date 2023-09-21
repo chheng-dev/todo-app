@@ -57,7 +57,6 @@ class _CardWidgetBuildState extends State<CardWidgetBuild> {
 
   @override
   Widget build(BuildContext context) {
-    bool _isChecked = false;
     final FirestoreHelper taskCrudHelper = FirestoreHelper();
 
     return StreamBuilder<List<TaskModel>>(
@@ -102,69 +101,83 @@ class _CardWidgetBuildState extends State<CardWidgetBuild> {
                 key: ObjectKey(task[index]),
                 child: Column(
                   children: [
-                    Container(
-                      padding: EdgeInsets.symmetric(vertical: 8),
-                      margin: EdgeInsets.symmetric(vertical: 3),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            width: 120,
-                            child: Column(
-                              children: [
-                                Text(timeFormat.format(
-                                    dateFormat.parse(task[index].dateTime))),
-                              ],
-                            ),
-                          ),
-                          Expanded(
-                            child: Container(
+                    InkWell(
+                      onDoubleTap: () =>
+                          _toggleCompletion(context, task[index]),
+                      child: Container(
+                        padding: EdgeInsets.symmetric(vertical: 8),
+                        margin: EdgeInsets.symmetric(vertical: 3),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              width: 120,
                               child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    task[index].title,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w800,
+                                    timeFormat.format(
+                                      dateFormat.parse(task[index].dateTime),
                                     ),
-                                  ),
-                                  Row(
-                                    children: [
-                                      Icon(
-                                        Icons.delivery_dining_rounded,
-                                        size: 17,
-                                        color: Colors.grey.shade800,
-                                      ),
-                                      SizedBox(width: 4),
-                                      Text(
-                                        task[index].toLocation,
-                                        style: TextStyle(
-                                          color: Colors.grey.shade800,
-                                        ),
-                                      ),
-                                    ],
                                   ),
                                 ],
                               ),
                             ),
-                          ),
-                          Container(
-                            padding: EdgeInsets.only(right: 10),
-                            child: Checkbox(
-                              onChanged: (value) {},
-                              value: _isChecked,
+                            Expanded(
+                              child: Container(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      task[index].title,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w800,
+                                      ),
+                                    ),
+                                    Row(
+                                      children: [
+                                        Icon(
+                                          Icons.delivery_dining_rounded,
+                                          size: 17,
+                                          color: Colors.grey.shade800,
+                                        ),
+                                        SizedBox(width: 4),
+                                        Text(
+                                          task[index].toLocation,
+                                          style: TextStyle(
+                                            color: Colors.grey.shade800,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
-                          ),
-                          Container(
-                            padding: EdgeInsets.only(right: 10),
-                            child: EditTodoList(
-                              task: task[index],
+                            // Container(
+                            //   padding: EdgeInsets.only(right: 5),
+                            //   child: Checkbox(
+                            //     onChanged: (value) {},
+                            //     value: _isChecked,
+                            //   ),
+                            // ),
+                            Container(
+                              padding: EdgeInsets.only(right: 5),
+                              width: 20,
+                              child: CircleAvatar(
+                                  backgroundColor:
+                                      _getBackgroundColor(task[index].status)),
                             ),
-                          ),
-                        ],
+                            Container(
+                              padding: EdgeInsets.only(right: 5),
+                              child: EditTodoList(
+                                task: task[index],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ],
@@ -178,5 +191,93 @@ class _CardWidgetBuildState extends State<CardWidgetBuild> {
         );
       },
     );
+  }
+
+  Color _getBackgroundColor(String status) {
+    switch (status) {
+      case 'ជោគជ័យ':
+        return Colors.green;
+      case 'កំពុងដំណើរការ':
+        return Colors.orange.shade400;
+      case 'បោះបង់':
+        return Colors.red;
+      default:
+        return Colors.white; // Default color, adjust as needed
+    }
+  }
+
+  void _toggleCompletion(BuildContext context, TaskModel taskModel) async {
+    print("hello");
+    String? updateStatus = await showDialog<String>(
+      context: context,
+      builder: (context) {
+        return Container(
+          width: double.infinity,
+          child: AlertDialog(
+            title: Text('Update Task Status'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Current Status: ${_getStatusDisplay(taskModel.isCompleted, taskModel.status)}',
+                ),
+                SizedBox(height: 16.0),
+                Text('Select New Status:'),
+                DropdownButton(
+                    items: ["ជោគជ័យ", "កំពុងដំណើរការ", "បោះបង់"]
+                        .map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      Navigator.pop(context, newValue);
+                    })
+              ],
+            ),
+          ),
+        );
+      },
+    );
+
+    if (updateStatus != null) {
+      bool _isCompleted = updateStatus == 'ជោគជ័យ';
+
+      TaskModel updatTaskModel = TaskModel(
+        id: taskModel.id,
+        title: taskModel.title,
+        dateTime: taskModel.dateTime,
+        amount: taskModel.amount,
+        status: updateStatus,
+        isCompleted: _isCompleted,
+        paymentMethod: taskModel.paymentMethod,
+        deliveryType: taskModel.deliveryType,
+        toLocation: taskModel.toLocation,
+      );
+      FirestoreHelper().updateTask(updatTaskModel);
+    }
+  }
+  // items: ["ជោគជ័យ", "កំពុងដំណើរការ", "បោះបង់"]
+
+  String _getStatusDisplay(bool? isCompleted, String? status) {
+    if (isCompleted == false && status == "បោះបង់") {
+      return 'បោះបង់';
+    } else if (isCompleted == true) {
+      return 'ជោគជ័យ';
+    } else {
+      return 'កំពុងដំណើរការ';
+    }
+    // return isCompleted ? 'ជោគជ័យ' : 'កំពុងដំណើរការ';
+  }
+
+  bool? _getStatusValue(String? status) {
+    if (status == 'ជោគជ័យ') {
+      return true;
+    } else if (status == 'បោះបង់') {
+      return null; // Use null to indicate 'Cancelled'
+    } else {
+      return false;
+    }
   }
 }

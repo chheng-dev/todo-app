@@ -55,6 +55,7 @@ class _CreateTodoListState extends State<CreateTodoList> {
     String _statusOption = "ជោគជ័យ";
     String _paymentMethod = "សាច់ប្រាក់";
     String _deliveryType = "Grab";
+
     final TextEditingController _amountController = TextEditingController();
 
     return showModalBottomSheet(
@@ -238,7 +239,8 @@ class _CreateTodoListState extends State<CreateTodoList> {
                                 "សាច់ប្រាក់",
                                 "ABA Bank",
                                 "ACLEDA",
-                                "KHQR"
+                                "KHQR",
+                                "Wing"
                               ].map((String value) {
                                 return DropdownMenuItem<String>(
                                   value: value,
@@ -366,12 +368,17 @@ class _CreateTodoListState extends State<CreateTodoList> {
                                   _statusController.text != "" ||
                                   _toLocationController.text != "" ||
                                   _datetimeController.text != "") {
+                                // items: ["ជោគជ័យ", "កំពុងដំណើរការ", "បោះបង់"]
+
+                                bool? isCompleted = _statusOption == "ជោគជ័យ";
+
                                 TaskModel newTask = TaskModel(
                                   id: '', // Firestore will generate an ID
                                   title: _titleController.text,
                                   dateTime: _datetimeController.text,
                                   amount: amount,
                                   status: _statusOption,
+                                  isCompleted: isCompleted,
                                   paymentMethod: _paymentMethod,
                                   deliveryType: _deliveryType,
                                   toLocation: _toLocationController.text,

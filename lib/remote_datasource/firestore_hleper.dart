@@ -14,6 +14,7 @@ class FirestoreHelper {
       'paymentMethod': taskModel.paymentMethod,
       'deliveryType': taskModel.deliveryType,
       'toLocation': taskModel.toLocation,
+      'isCompleted': taskModel.isCompleted,
     });
   }
 
@@ -30,6 +31,7 @@ class FirestoreHelper {
       'paymentMethod': taskModel.paymentMethod,
       'deliveryType': taskModel.deliveryType,
       'toLocation': taskModel.toLocation,
+      'isCompleted': taskModel.isCompleted
     });
   }
 

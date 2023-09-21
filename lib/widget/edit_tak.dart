@@ -392,6 +392,7 @@ class _EditTodoListState extends State<EditTodoList> {
                               double amount =
                                   double.tryParse(_amountController.text) ??
                                       0.0;
+                              bool? isCompleted = _selectedStatus == "ជោគជ័យ";
 
                               // if (_titleController.text != "" ||
                               //     _statusController.text != "" ||
@@ -404,6 +405,7 @@ class _EditTodoListState extends State<EditTodoList> {
                                 dateTime: _selectedDateTime.text,
                                 amount: amount,
                                 status: _selectedStatus,
+                                isCompleted: isCompleted,
                                 paymentMethod: _selectedPaymethdOpetion,
                                 deliveryType: _selectedDeliveryType,
                                 toLocation: _toLocationController.text,
