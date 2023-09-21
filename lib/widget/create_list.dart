@@ -1,9 +1,11 @@
+import 'package:alert_dialog/alert_dialog.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:todo_app_list/models/task.dart';
 import 'package:todo_app_list/remote_datasource/firestore_hleper.dart';
 import 'package:todo_app_list/src/config/color_constants.dart';
+import 'package:todo_app_list/widget/sd/alert_dialog.dart';
 import 'package:todo_app_list/widget/text_field.dart';
 
 Future<void> main() async {
@@ -103,9 +105,9 @@ class _CreateTodoListState extends State<CreateTodoList> {
                     ),
                   ),
                   TextFielddBuild(
-                    txtLable: "ប្រភេទ",
+                    txtLable: "ឈ្មោះ",
                     readOnly: false,
-                    hitText: "បញ្ចូលប្រភេទ",
+                    hitText: "បញ្ចូលឈ្មោះ",
                     controller: _titleController,
                     suffixIcon: Icon(Icons.abc),
                   ),
@@ -382,8 +384,18 @@ class _CreateTodoListState extends State<CreateTodoList> {
                                 _deliveryController.clear();
                                 Navigator.pop(context);
                               } else {
-                                // ShowAlert
-                                // Alert(message: "Hello world").show();
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return CustomAlertDialog(
+                                      title: "ព័ត៌មាន",
+                                      content: "សូមជួយបំពេញចន្លោះទទេជាមុន។",
+                                      onConfirm: () {
+                                        Navigator.pop(context);
+                                      },
+                                    );
+                                  },
+                                );
                               }
                             },
                           ),

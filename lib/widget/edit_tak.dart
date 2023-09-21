@@ -141,9 +141,9 @@ class _EditTodoListState extends State<EditTodoList> {
                     ),
                   ),
                   TextFielddBuild(
-                    txtLable: "ប្រភេទ",
+                    txtLable: "ឈ្មោះ",
                     readOnly: false,
-                    hitText: "បញ្ចូលប្រភេទ",
+                    hitText: "បញ្ចូលឈ្មោះ",
                     controller: _titleController,
                     suffixIcon: Icon(Icons.abc),
                   ),

@@ -67,10 +67,14 @@ class _CardWidgetBuildState extends State<CardWidgetBuild> {
           return Center(
             child: CircularProgressIndicator(),
           );
-        }
-        if (snapshot.hasError) {
+        } else if (snapshot.hasError) {
           return Center(
             child: Text("Some errors ocrrued"),
+          );
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return Container(
+            alignment: Alignment.topCenter,
+            child: Image.asset('assets/images/empty.png'),
           );
         }
 
