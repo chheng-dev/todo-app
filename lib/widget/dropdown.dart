@@ -17,8 +17,6 @@ class _DropdownBuildState extends State<DropdownBuild> {
     String? selectedOption;
     List<String> status = ["ជោគជ័យ", "កំពុងដំណើរការ", "បោះបង់"];
 
-    final TextEditingController selectedValueController =
-        TextEditingController();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

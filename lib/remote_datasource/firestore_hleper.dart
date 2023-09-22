@@ -15,6 +15,8 @@ class FirestoreHelper {
       'deliveryType': taskModel.deliveryType,
       'toLocation': taskModel.toLocation,
       'isCompleted': taskModel.isCompleted,
+      'createdAt': taskModel.createdAt,
+      'updatedAt': taskModel.updatedAt,
     });
   }
 
@@ -31,7 +33,8 @@ class FirestoreHelper {
       'paymentMethod': taskModel.paymentMethod,
       'deliveryType': taskModel.deliveryType,
       'toLocation': taskModel.toLocation,
-      'isCompleted': taskModel.isCompleted
+      'isCompleted': taskModel.isCompleted,
+      'updatedAt': DateTime.now(),
     });
   }
 
@@ -39,6 +42,7 @@ class FirestoreHelper {
     return FirebaseFirestore.instance
         .collection("task")
         .where("title", isGreaterThanOrEqualTo: query)
+        .where("title", isLessThan: query + 'z')
         .snapshots()
         .map((snapshot) {
       return snapshot.docs.map((doc) => TaskModel.fromFirestore(doc)).toList();

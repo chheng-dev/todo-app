@@ -3,14 +3,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class TaskModel {
   final String id;
   final String title;
-  // final DateTime dateTime;
-  String dateTime;
   final double amount;
   final String status;
   final String paymentMethod;
   final String deliveryType;
   final String toLocation;
   final bool? isCompleted;
+  DateTime createdAt;
+  DateTime updatedAt;
+  String dateTime;
+  // DateTime dateTime;
 
   TaskModel({
     required this.id,
@@ -22,6 +24,8 @@ class TaskModel {
     required this.deliveryType,
     required this.toLocation,
     this.isCompleted,
+    required this.createdAt,
+    required this.updatedAt,
   });
 
   factory TaskModel.fromFirestore(DocumentSnapshot doc) {
@@ -36,6 +40,8 @@ class TaskModel {
       deliveryType: data['deliveryType'],
       toLocation: data['toLocation'],
       isCompleted: data['isCompleted'],
+      createdAt: data['createdAt'],
+      updatedAt: data['updatedAt'],
     );
   }
 }

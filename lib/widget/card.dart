@@ -1,14 +1,12 @@
-import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:todo_app_list/models/task.dart';
 import 'package:todo_app_list/remote_datasource/firestore_hleper.dart';
-import 'package:todo_app_list/src/config/color_constants.dart';
 import 'package:todo_app_list/widget/create_list.dart';
 import 'package:todo_app_list/widget/edit_tak.dart';
+import 'package:todo_app_list/src/config/color_constants.dart';
 
 class CardWidgetBuild extends StatefulWidget {
   final Stream<List<TaskModel>> tasksStream;
@@ -23,7 +21,7 @@ class CardWidgetBuild extends StatefulWidget {
 }
 
 class _CardWidgetBuildState extends State<CardWidgetBuild> {
-  DateFormat timeFormat = DateFormat('hh:mm a');
+  // DateFormat timeFormat = DateFormat('hh:mm a');
   DateFormat dateFormat = DateFormat('dd/MM/yyyy');
 
   final leftEditButton = Container(
@@ -117,11 +115,7 @@ class _CardWidgetBuildState extends State<CardWidgetBuild> {
                               width: 120,
                               child: Column(
                                 children: [
-                                  Text(
-                                    timeFormat.format(
-                                      dateFormat.parse(task[index].dateTime),
-                                    ),
-                                  ),
+                                  Text("hell"),
                                 ],
                               ),
                             ),
@@ -156,13 +150,6 @@ class _CardWidgetBuildState extends State<CardWidgetBuild> {
                                 ),
                               ),
                             ),
-                            // Container(
-                            //   padding: EdgeInsets.only(right: 5),
-                            //   child: Checkbox(
-                            //     onChanged: (value) {},
-                            //     value: _isChecked,
-                            //   ),
-                            // ),
                             Container(
                               padding: EdgeInsets.only(right: 5),
                               width: 20,
@@ -254,11 +241,12 @@ class _CardWidgetBuildState extends State<CardWidgetBuild> {
         paymentMethod: taskModel.paymentMethod,
         deliveryType: taskModel.deliveryType,
         toLocation: taskModel.toLocation,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
       );
       FirestoreHelper().updateTask(updatTaskModel);
     }
   }
-  // items: ["ជោគជ័យ", "កំពុងដំណើរការ", "បោះបង់"]
 
   String _getStatusDisplay(bool? isCompleted, String? status) {
     if (isCompleted == false && status == "បោះបង់") {
@@ -268,16 +256,15 @@ class _CardWidgetBuildState extends State<CardWidgetBuild> {
     } else {
       return 'កំពុងដំណើរការ';
     }
-    // return isCompleted ? 'ជោគជ័យ' : 'កំពុងដំណើរការ';
   }
 
-  bool? _getStatusValue(String? status) {
-    if (status == 'ជោគជ័យ') {
-      return true;
-    } else if (status == 'បោះបង់') {
-      return null; // Use null to indicate 'Cancelled'
-    } else {
-      return false;
-    }
-  }
+  // bool? _getStatusValue(String? status) {
+  //   if (status == 'ជោគជ័យ') {
+  //     return true;
+  //   } else if (status == 'បោះបង់') {
+  //     return null; // Use null to indicate 'Cancelled'
+  //   } else {
+  //     return false;
+  //   }
+  // }
 }

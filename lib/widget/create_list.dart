@@ -55,6 +55,7 @@ class _CreateTodoListState extends State<CreateTodoList> {
     String _statusOption = "ជោគជ័យ";
     String _paymentMethod = "សាច់ប្រាក់";
     String _deliveryType = "Grab";
+    // DateTime _datetimeController = DateTime.now();
 
     final TextEditingController _amountController = TextEditingController();
 
@@ -336,7 +337,6 @@ class _CreateTodoListState extends State<CreateTodoList> {
                             onPressed: () {
                               _titleController.clear();
                               _noteController.clear();
-                              _datetimeController.clear();
                               _statusController.clear();
                               // amoutController.clear();
                               _paymentMethodController.clear();
@@ -366,8 +366,7 @@ class _CreateTodoListState extends State<CreateTodoList> {
 
                               if (_titleController.text != "" ||
                                   _statusController.text != "" ||
-                                  _toLocationController.text != "" ||
-                                  _datetimeController.text != "") {
+                                  _toLocationController.text != "") {
                                 // items: ["ជោគជ័យ", "កំពុងដំណើរការ", "បោះបង់"]
 
                                 bool? isCompleted = _statusOption == "ជោគជ័យ";
@@ -382,10 +381,11 @@ class _CreateTodoListState extends State<CreateTodoList> {
                                   paymentMethod: _paymentMethod,
                                   deliveryType: _deliveryType,
                                   toLocation: _toLocationController.text,
+                                  createdAt: DateTime.now(),
+                                  updatedAt: DateTime.now(),
                                 );
                                 taskCrudHelper.addTask(newTask);
                                 _titleController.clear();
-                                _datetimeController.clear();
                                 _statusController.clear();
                                 amount = amount;
                                 _deliveryController.clear();
