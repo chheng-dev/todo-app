@@ -66,7 +66,9 @@ class _CardWidgetBuildState extends State<CardWidgetBuild> {
           return Center(
             child: CircularProgressIndicator(),
           );
-        } else if (snapshot.hasError) {
+        }
+        if (snapshot.hasError) {
+          print('Error: ${snapshot.error}');
           return Center(
             child: Text("Some errors ocrrued"),
           );
@@ -79,6 +81,7 @@ class _CardWidgetBuildState extends State<CardWidgetBuild> {
 
         if (snapshot.hasData) {
           List<TaskModel> task = snapshot.data!;
+          task.sort((a, b) => b.createdAt.compareTo(a.createdAt));
           return ListView.builder(
             itemCount: task.length,
             scrollDirection: Axis.vertical,
@@ -254,6 +257,8 @@ class _CardWidgetBuildState extends State<CardWidgetBuild> {
         paymentMethod: taskModel.paymentMethod,
         deliveryType: taskModel.deliveryType,
         toLocation: taskModel.toLocation,
+        createdAt: taskModel.createdAt,
+        updatedAt: taskModel.updatedAt,
       );
       FirestoreHelper().updateTask(updatTaskModel);
     }

@@ -409,6 +409,8 @@ class _EditTodoListState extends State<EditTodoList> {
                                 paymentMethod: _selectedPaymethdOpetion,
                                 deliveryType: _selectedDeliveryType,
                                 toLocation: _toLocationController.text,
+                                createdAt: DateTime.now(),
+                                updatedAt: DateTime.now(),
                               );
                               taskCrudHelper.updateTask(updateTask);
                               Navigator.pop(context);

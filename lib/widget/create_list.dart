@@ -370,7 +370,7 @@ class _CreateTodoListState extends State<CreateTodoList> {
                                   _datetimeController.text != "") {
                                 // items: ["ជោគជ័យ", "កំពុងដំណើរការ", "បោះបង់"]
 
-                                bool? isCompleted = _statusOption == "ជោគជ័យ";
+                                bool isCompleted = _statusOption == "ជោគជ័យ";
 
                                 TaskModel newTask = TaskModel(
                                   id: '', // Firestore will generate an ID
@@ -382,6 +382,8 @@ class _CreateTodoListState extends State<CreateTodoList> {
                                   paymentMethod: _paymentMethod,
                                   deliveryType: _deliveryType,
                                   toLocation: _toLocationController.text,
+                                  createdAt: DateTime.now(),
+                                  updatedAt: DateTime.now(),
                                 );
                                 taskCrudHelper.addTask(newTask);
                                 _titleController.clear();
