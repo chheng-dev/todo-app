@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:todo_app_list/widget/calendar.dart';
-import 'package:todo_app_list/widget/top_bar.dart';
 
 void main() {
   runApp(const CalendarBuild());

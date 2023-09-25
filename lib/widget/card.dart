@@ -121,8 +121,12 @@ class _CardWidgetBuildState extends State<CardWidgetBuild> {
                               child: Column(
                                 children: [
                                   Text(
-                                    timeFormat.format(
-                                      dateFormat.parse(task[index].dateTime),
+                                    '\$ ${task[index].amount.toStringAsFixed(2)}',
+                                    style: TextStyle(
+                                      color: _getBackgroundColor(
+                                          task[index].status),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 22,
                                     ),
                                   ),
                                 ],
@@ -137,6 +141,7 @@ class _CardWidgetBuildState extends State<CardWidgetBuild> {
                                       task[index].title,
                                       style: TextStyle(
                                         fontWeight: FontWeight.w800,
+                                        fontFamily: "Battambang",
                                       ),
                                     ),
                                     Row(
@@ -151,6 +156,7 @@ class _CardWidgetBuildState extends State<CardWidgetBuild> {
                                           task[index].toLocation,
                                           style: TextStyle(
                                             color: Colors.grey.shade800,
+                                            fontFamily: "Battambang",
                                           ),
                                         ),
                                       ],
@@ -159,19 +165,13 @@ class _CardWidgetBuildState extends State<CardWidgetBuild> {
                                 ),
                               ),
                             ),
-                            // Container(
-                            //   padding: EdgeInsets.only(right: 5),
-                            //   child: Checkbox(
-                            //     onChanged: (value) {},
-                            //     value: _isChecked,
-                            //   ),
-                            // ),
                             Container(
                               padding: EdgeInsets.only(right: 5),
                               width: 20,
                               child: CircleAvatar(
-                                  backgroundColor:
-                                      _getBackgroundColor(task[index].status)),
+                                backgroundColor:
+                                    _getBackgroundColor(task[index].status),
+                              ),
                             ),
                             Container(
                               padding: EdgeInsets.only(right: 5),
@@ -210,7 +210,6 @@ class _CardWidgetBuildState extends State<CardWidgetBuild> {
   }
 
   void _toggleCompletion(BuildContext context, TaskModel taskModel) async {
-    print("hello");
     String? updateStatus = await showDialog<String>(
       context: context,
       builder: (context) {

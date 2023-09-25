@@ -2,10 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:todo_app_list/widget/calendar.dart';
 import 'package:todo_app_list/widget/create_list.dart';
 
-class TopBarBuild extends StatelessWidget {
-  const TopBarBuild({
-    super.key,
-  });
+class TopBarBuild extends StatefulWidget {
+  final Function(DateTime) onDateSelected;
+  const TopBarBuild({Key? key, required this.onDateSelected}) : super(key: key);
+
+  @override
+  State<TopBarBuild> createState() => _TopBarBuildState();
+}
+
+class _TopBarBuildState extends State<TopBarBuild> {
+  DateTime selectedDate = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +39,17 @@ class TopBarBuild extends StatelessWidget {
           ),
           Row(
             children: [
-              CalendarBuild(),
+              Container(
+                child: InkWell(
+                  onTap: () {
+                    _showDatePicker(context);
+                  },
+                  child: Icon(
+                    Icons.calendar_month,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
               SizedBox(width: 10),
               CreateTodoList(),
             ],
@@ -41,5 +57,21 @@ class TopBarBuild extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Future<void> _showDatePicker(BuildContext context) async {
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2023),
+      lastDate: DateTime(2025),
+    );
+
+    if (pickedDate != null) {
+      setState(() {
+        selectedDate = pickedDate;
+        widget.onDateSelected(selectedDate);
+      });
+    }
   }
 }

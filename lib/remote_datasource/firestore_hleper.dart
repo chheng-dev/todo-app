@@ -41,10 +41,14 @@ class FirestoreHelper {
   Stream<List<TaskModel>> searchTasks(String query) {
     return FirebaseFirestore.instance
         .collection("task")
-        .where("title", isGreaterThanOrEqualTo: query)
         .snapshots()
         .map((snapshot) {
-      return snapshot.docs.map((doc) => TaskModel.fromFirestore(doc)).toList();
+      print(snapshot.docs);
+      return snapshot.docs
+          .map((doc) => TaskModel.fromFirestore(doc))
+          .where(
+              (task) => task.title.toLowerCase().contains(query.toLowerCase()))
+          .toList();
     });
   }
 

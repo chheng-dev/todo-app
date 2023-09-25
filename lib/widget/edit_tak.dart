@@ -84,6 +84,7 @@ class _EditTodoListState extends State<EditTodoList> {
               onTap: () => ShowModalBottom(context),
               child: Icon(
                 Icons.edit_note,
+                size: 32,
               ),
             ),
           ),

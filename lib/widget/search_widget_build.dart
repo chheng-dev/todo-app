@@ -50,8 +50,6 @@ class _SearchWidgetBuildState extends State<SearchWidgetBuild> {
   }
 
   void _onSearchTextChanged(String query) {
-    print("hello");
-    print(query);
     setState(() {
       _taskStream = taskCrudHelper.searchTasks(query);
       print(_taskStream);
