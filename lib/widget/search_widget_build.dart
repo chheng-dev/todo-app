@@ -1,58 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:todo_app_list/models/task.dart';
-import 'package:todo_app_list/remote_datasource/firestore_hleper.dart';
 import 'package:todo_app_list/src/config/color_constants.dart';
 
-class SearchWidgetBuild extends StatefulWidget {
-  const SearchWidgetBuild({
-    super.key,
-  });
+class SearchWidgetBuild extends StatelessWidget {
+  final Function(String) onSearchQueryChanged;
 
-  @override
-  State<SearchWidgetBuild> createState() => _SearchWidgetBuildState();
-}
-
-class _SearchWidgetBuildState extends State<SearchWidgetBuild> {
-  final FirestoreHelper taskCrudHelper = FirestoreHelper();
-  late Stream<List<TaskModel>> _taskStream;
-
-  @override
-  void initState() {
-    super.initState();
-    _taskStream = taskCrudHelper.getTaskList();
-  }
+  SearchWidgetBuild(this.onSearchQueryChanged);
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        Container(
-          color: Colors.white,
-          width: double.infinity,
-          child: TextField(
-            onChanged: _onSearchTextChanged,
-            decoration: InputDecoration(
-              contentPadding: EdgeInsets.symmetric(horizontal: 12),
-              labelText: "ស្វែងរក....",
-              enabledBorder: InputBorder.none,
-              focusedBorder: InputBorder.none,
-              suffixIcon: Icon(
-                Icons.search,
-                color: ColorConstants.primary,
-              ),
-              border: InputBorder.none,
-            ),
-          ),
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 12),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade200,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: TextField(
+        onChanged: onSearchQueryChanged,
+        decoration: InputDecoration(
+          enabledBorder: InputBorder.none,
+          focusedBorder: InputBorder.none,
+          hintText: "ស្វែងរក....",
+          suffixIcon: Icon(Icons.search),
         ),
-      ],
+      ),
     );
-  }
-
-  void _onSearchTextChanged(String query) {
-    setState(() {
-      _taskStream = taskCrudHelper.searchTasks(query);
-      print(_taskStream);
-    });
   }
 }

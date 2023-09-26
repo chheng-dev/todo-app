@@ -322,11 +322,11 @@ class _CreateTodoListState extends State<CreateTodoList> {
                         Expanded(
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              foregroundColor: ColorConstants.primaryDark,
+                              foregroundColor: ColorConstants.primary,
                               backgroundColor: Colors.white,
                               elevation: 0,
                               side: BorderSide(
-                                color: Colors.blue.shade800,
+                                color: ColorConstants.primary,
                               ),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8),
@@ -349,10 +349,10 @@ class _CreateTodoListState extends State<CreateTodoList> {
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               foregroundColor: Colors.white,
-                              backgroundColor: ColorConstants.primaryDark,
+                              backgroundColor: ColorConstants.primary,
                               elevation: 0,
                               side: BorderSide(
-                                color: Colors.blue.shade800,
+                                color: ColorConstants.primary,
                               ),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8),
@@ -368,8 +368,6 @@ class _CreateTodoListState extends State<CreateTodoList> {
                                   _statusController.text != "" ||
                                   _toLocationController.text != "" ||
                                   _datetimeController.text != "") {
-                                // items: ["ជោគជ័យ", "កំពុងដំណើរការ", "បោះបង់"]
-
                                 bool isCompleted = _statusOption == "ជោគជ័យ";
 
                                 TaskModel newTask = TaskModel(

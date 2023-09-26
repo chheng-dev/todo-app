@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 import 'package:todo_app_list/models/task.dart';
 
 class FirestoreHelper {
@@ -52,8 +53,23 @@ class FirestoreHelper {
     });
   }
 
-  Stream<List<TaskModel>> getTaskList() {
-    return taskCollectionRef.snapshots().map((snapshot) {
+  Stream<List<TaskModel>> getTaskList(String searchQuery, String selectedDate) {
+  
+    Query query = FirebaseFirestore.instance.collection("task");
+
+    if (searchQuery.isNotEmpty) {
+      query = query.where("title", isGreaterThanOrEqualTo: searchQuery);
+    }
+
+    if (selectedDate.isNotEmpty) {
+      query = query.where("dateTime", isEqualTo: selectedDate);
+    } else {
+      String parsedDate = DateFormat.yMd().format(DateTime.now());
+      print(parsedDate);
+      query = query.where("dateTime", isEqualTo: parsedDate);
+    }
+
+    return query.snapshots().map((snapshot) {
       return snapshot.docs.map((doc) => TaskModel.fromFirestore(doc)).toList();
     });
   }

@@ -8,6 +8,7 @@ import 'package:todo_app_list/remote_datasource/firestore_hleper.dart';
 import 'package:todo_app_list/src/config/color_constants.dart';
 import 'package:todo_app_list/widget/card.dart';
 import 'package:todo_app_list/widget/create_list.dart';
+import 'package:todo_app_list/widget/datepicker_widget.dart';
 import 'package:todo_app_list/widget/search_widget_build.dart';
 import 'package:todo_app_list/widget/task_card_list.dart';
 import 'package:todo_app_list/widget/top_bar.dart';
@@ -21,22 +22,47 @@ class Homepage extends StatefulWidget {
 
 class _HomepageState extends State<Homepage> {
   String _searchQuery = '';
-  DateTime filterDate = DateTime.now();
+  String _selectedDate = "";
   PageController controller = PageController(initialPage: 0);
   var selectedPage = 0;
+  String formattedDate = "";
 
-  void _updateSelectedDate(DateTime date) {
-    print(date);
-    setState(() {});
+  Stream<List<TaskModel>> _filterTaskStream = Stream.value([]);
+
+  void updateSearchQuery(String query) {
+    print(query);
+    setState(() {
+      _searchQuery = query;
+    });
+    refreshTaskList();
+  }
+
+  void _updateSelectedDate(String date) {
+    setState(() {
+      _selectedDate = date;
+
+      formattedDate =
+          DateFormat('E, MMM d').format(DateFormat.yMd().parse(date));
+      print(formattedDate);
+    });
+    refreshTaskList();
+  }
+
+  void refreshTaskList() {
+    _filterTaskStream =
+        FirestoreHelper().getTaskList(_searchQuery, _selectedDate);
   }
 
   @override
+  void initState() {
+    super.initState();
+    this.refreshTaskList();
+  }
+
   void dispose() {
     controller.dispose();
     super.dispose();
   }
-
-  Stream<List<TaskModel>> _filterTaskStream = FirestoreHelper().getTaskList();
 
   @override
   Widget build(BuildContext context) {
@@ -70,40 +96,19 @@ class _HomepageState extends State<Homepage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              TopBarBuild(
-                                onDateSelected: _updateSelectedDate,
+                              Row(
+                                children: [
+                                  Expanded(child: TopBarBuild()),
+                                  Container(
+                                      child: DatePickerWidget(
+                                          _updateSelectedDate)),
+                                ],
                               ),
                               SizedBox(height: 20),
                               Column(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
-                                  Container(
-                                    color: Colors.white,
-                                    width: double.infinity,
-                                    child: TextField(
-                                      onChanged: (query) {
-                                        setState(() {
-                                          _searchQuery = query;
-                                          _filterTaskStream =
-                                              FirestoreHelper().searchTasks(
-                                            _searchQuery,
-                                          );
-                                        });
-                                      },
-                                      decoration: InputDecoration(
-                                        contentPadding: EdgeInsets.symmetric(
-                                            horizontal: 12),
-                                        labelText: "ស្វែងរក....",
-                                        enabledBorder: InputBorder.none,
-                                        focusedBorder: InputBorder.none,
-                                        suffixIcon: Icon(
-                                          Icons.search,
-                                          color: ColorConstants.primary,
-                                        ),
-                                        border: InputBorder.none,
-                                      ),
-                                    ),
-                                  ),
+                                  SearchWidgetBuild(updateSearchQuery),
                                 ],
                               )
                             ],
@@ -116,8 +121,9 @@ class _HomepageState extends State<Homepage> {
                               padding: EdgeInsets.symmetric(vertical: 10),
                               child: Center(
                                 child: Text(
-                                  "Today",
+                                  formattedDate,
                                   style: TextStyle(
+                                    fontSize: 22,
                                     fontWeight: FontWeight.bold,
                                     color: ColorConstants.primary,
                                   ),
@@ -177,19 +183,5 @@ class _HomepageState extends State<Homepage> {
         ],
       ),
     );
-  }
-
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: filterDate,
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
-    );
-    if (picked != null && picked != filterDate) {
-      setState(() {
-        filterDate = picked;
-      });
-    }
   }
 }

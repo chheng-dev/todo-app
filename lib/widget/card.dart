@@ -61,7 +61,7 @@ class _CardWidgetBuildState extends State<CardWidgetBuild> {
 
     return StreamBuilder<List<TaskModel>>(
       stream: widget.tasksStream,
-      builder: (context, snapshot) {
+      builder: (context, AsyncSnapshot<List<TaskModel>> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(
             child: CircularProgressIndicator(),
@@ -210,34 +210,47 @@ class _CardWidgetBuildState extends State<CardWidgetBuild> {
   }
 
   void _toggleCompletion(BuildContext context, TaskModel taskModel) async {
-    String? updateStatus = await showDialog<String>(
+    String? updateStatus = await showModalBottomSheet<String>(
       context: context,
+      isScrollControlled: true,
+      isDismissible: false,
       builder: (context) {
         return Container(
-          width: double.infinity,
-          child: AlertDialog(
-            title: Text('Update Task Status'),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'Current Status: ${_getStatusDisplay(taskModel.isCompleted, taskModel.status)}',
+          padding: EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+          height: 170,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Current Status: ${_getStatusDisplay(taskModel.isCompleted, taskModel.status)}',
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 16.0),
+              Text(
+                'Select New Status:',
+                style: TextStyle(fontSize: 18),
+              ),
+              SizedBox(height: 4.0),
+              DropdownButtonFormField(
+                decoration: InputDecoration(
+                  enabledBorder: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                  filled: true,
+                  fillColor: Colors.white,
                 ),
-                SizedBox(height: 16.0),
-                Text('Select New Status:'),
-                DropdownButton(
-                    items: ["ជោគជ័យ", "កំពុងដំណើរការ", "បោះបង់"]
-                        .map((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                    onChanged: (String? newValue) {
-                      Navigator.pop(context, newValue);
-                    })
-              ],
-            ),
+                dropdownColor: Colors.white,
+                items:
+                    ["ជោគជ័យ", "កំពុងដំណើរការ", "បោះបង់"].map((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+                onChanged: (String? newValue) {
+                  Navigator.pop(context, newValue);
+                },
+              )
+            ],
           ),
         );
       },
