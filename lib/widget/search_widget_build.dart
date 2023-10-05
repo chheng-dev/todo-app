@@ -12,15 +12,22 @@ class SearchWidgetBuild extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
         color: Colors.grey.shade200,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(22),
       ),
       child: TextField(
+        style: TextStyle(
+          fontFamily: "KantumruyPro",
+        ),
         onChanged: onSearchQueryChanged,
         decoration: InputDecoration(
           enabledBorder: InputBorder.none,
           focusedBorder: InputBorder.none,
           hintText: "ស្វែងរក....",
-          suffixIcon: Icon(Icons.search),
+          suffixIcon: Icon(
+            Icons.search,
+            size: 32,
+            color: Colors.black,
+          ),
         ),
       ),
     );

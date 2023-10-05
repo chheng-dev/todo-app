@@ -5,7 +5,7 @@ void main() {
 }
 
 class DropdownBuild extends StatefulWidget {
-  const DropdownBuild({super.key});
+  const DropdownBuild({Key? key}) : super(key: key);
 
   @override
   State<DropdownBuild> createState() => _DropdownBuildState();
@@ -27,10 +27,14 @@ class _DropdownBuildState extends State<DropdownBuild> {
           style: TextStyle(
             fontWeight: FontWeight.w500,
             fontSize: 18,
+            fontFamily: 'KantumruyPro',
           ),
         ),
         Container(
           child: DropdownButtonFormField(
+            style: TextStyle(
+              fontFamily: "KantumruyPro",
+            ),
             decoration: InputDecoration(
               enabledBorder: InputBorder.none,
               focusedBorder: InputBorder.none,
@@ -49,7 +53,10 @@ class _DropdownBuildState extends State<DropdownBuild> {
                 value: value,
                 child: Text(
                   value,
-                  style: TextStyle(fontSize: 20),
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontFamily: 'KantumruyPro',
+                  ),
                 ),
               );
             }).toList(),

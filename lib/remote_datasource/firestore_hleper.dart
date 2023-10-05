@@ -54,7 +54,6 @@ class FirestoreHelper {
   }
 
   Stream<List<TaskModel>> getTaskList(String searchQuery, String selectedDate) {
-  
     Query query = FirebaseFirestore.instance.collection("task");
 
     if (searchQuery.isNotEmpty) {
@@ -65,9 +64,18 @@ class FirestoreHelper {
       query = query.where("dateTime", isEqualTo: selectedDate);
     } else {
       String parsedDate = DateFormat.yMd().format(DateTime.now());
-      print(parsedDate);
       query = query.where("dateTime", isEqualTo: parsedDate);
     }
+
+    return query.snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) => TaskModel.fromFirestore(doc)).toList();
+    });
+  }
+
+  Stream<List<TaskModel>> filterByDate(String selectedDate) {
+    Query query = FirebaseFirestore.instance.collection("task");
+
+    query = query.where("dateTime", isEqualTo: selectedDate);
 
     return query.snapshots().map((snapshot) {
       return snapshot.docs.map((doc) => TaskModel.fromFirestore(doc)).toList();

@@ -105,9 +105,22 @@ class _EditTodoListState extends State<EditTodoList> {
               bottom: MediaQuery.of(context).viewInsets.bottom,
             ),
             child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border(
+                  bottom: BorderSide(
+                    width: 1.5,
+                    color: Colors.grey.shade400.withOpacity(0.5),
+                  ),
+                ),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(54),
+                  topRight: Radius.circular(54),
+                ),
+              ),
               height: MediaQuery.sizeOf(context).height * 0.8,
               width: double.infinity,
-              color: Colors.white,
+              // color: Colors.white,
               padding: EdgeInsets.symmetric(horizontal: 12),
               child: Column(
                 children: [
@@ -119,8 +132,9 @@ class _EditTodoListState extends State<EditTodoList> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "Edit Task",
+                          "កែសម្រួល",
                           style: TextStyle(
+                            fontFamily: 'KantumruyPro',
                             fontWeight: FontWeight.bold,
                             fontSize: 22,
                           ),
@@ -147,6 +161,7 @@ class _EditTodoListState extends State<EditTodoList> {
                     hitText: "បញ្ចូលឈ្មោះ",
                     controller: _titleController,
                     suffixIcon: Icon(Icons.abc),
+                    keyboardType: TextInputType.text,
                   ),
                   SizedBox(height: 8.0),
                   // //delivery Type
@@ -156,6 +171,7 @@ class _EditTodoListState extends State<EditTodoList> {
                       Text(
                         "អ្នកដឹក",
                         style: TextStyle(
+                          fontFamily: 'KantumruyPro',
                           fontWeight: FontWeight.w500,
                           fontSize: 18,
                         ),
@@ -191,18 +207,19 @@ class _EditTodoListState extends State<EditTodoList> {
                     hitText: "បញ្ចូលប្រភេទទីតាំង",
                     controller: _toLocationController,
                     suffixIcon: Icon(Icons.description),
+                    keyboardType: TextInputType.text,
                   ),
                   SizedBox(height: 8.0),
                   Row(
                     children: [
                       Expanded(
                         child: TextFielddBuild(
-                          //  keyboardType: TextInputType.number,
                           txtLable: "តម្លៃ",
                           readOnly: false,
                           hitText: "បញ្ចូលតម្លៃ",
                           controller: _amountController,
                           suffixIcon: Icon(Icons.description),
+                          keyboardType: TextInputType.number,
                         ),
                       ),
                       SizedBox(width: 6.0),
@@ -215,6 +232,7 @@ class _EditTodoListState extends State<EditTodoList> {
                             Text(
                               "ស្ថានភាព",
                               style: TextStyle(
+                                fontFamily: 'KantumruyPro',
                                 fontWeight: FontWeight.w500,
                                 fontSize: 18,
                               ),
@@ -258,6 +276,7 @@ class _EditTodoListState extends State<EditTodoList> {
                             Text(
                               "បង់តាមរយ",
                               style: TextStyle(
+                                fontFamily: 'KantumruyPro',
                                 fontWeight: FontWeight.w500,
                                 fontSize: 18,
                               ),
@@ -300,6 +319,7 @@ class _EditTodoListState extends State<EditTodoList> {
                             Text(
                               "នៅថ្ថៃ",
                               style: TextStyle(
+                                fontFamily: 'KantumruyPro',
                                 fontWeight: FontWeight.w500,
                                 fontSize: 18,
                               ),
@@ -368,7 +388,13 @@ class _EditTodoListState extends State<EditTodoList> {
                                 borderRadius: BorderRadius.circular(8),
                               ),
                             ),
-                            child: Text("ត្រលប់"),
+                            child: Text(
+                              "ត្រលប់",
+                              style: TextStyle(
+                                fontFamily: "KantumruyPro",
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
                             onPressed: () {
                               Navigator.pop(context);
                             },
@@ -388,7 +414,13 @@ class _EditTodoListState extends State<EditTodoList> {
                                 borderRadius: BorderRadius.circular(8),
                               ),
                             ),
-                            child: const Text("Update"),
+                            child: const Text(
+                              "កែប្រែ",
+                              style: TextStyle(
+                                fontFamily: "KantumruyPro",
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
                             onPressed: () async {
                               double amount =
                                   double.tryParse(_amountController.text) ??

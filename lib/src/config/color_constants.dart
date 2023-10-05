@@ -11,7 +11,7 @@ Color hexToColor(String hex) {
 }
 
 class ColorConstants {
-  static const Color primary = Colors.deepPurple;
+  // static const Color primary = Colors.deepPurple;
   static const Color primaryDark = Color(0xFF0C44A3);
   static const Color primaryLight = Color(0xFF43A3F3);
   static const Color green = Colors.green;
@@ -31,6 +31,7 @@ class ColorConstants {
   static const Color grey_100_ = Color(0xFF0d0d0d);
   static Color ColorPurple = hexToColor('#652d90');
   static Color ColorPrimary = hexToColor('#f6f8fa');
+  static Color primary = hexToColor('#336aea');
   // static Color ColorPrimaryDark = hexToColor('#1b1b1b');
   // static Color ColorDark = hexToColor('#313131');
 }

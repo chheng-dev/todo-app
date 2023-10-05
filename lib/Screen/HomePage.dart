@@ -1,20 +1,15 @@
-import 'package:bottom_bar/bottom_bar.dart';
-import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:table_calendar/table_calendar.dart';
 import 'package:todo_app_list/models/task.dart';
 import 'package:todo_app_list/remote_datasource/firestore_hleper.dart';
 import 'package:todo_app_list/src/config/color_constants.dart';
 import 'package:todo_app_list/widget/card.dart';
-import 'package:todo_app_list/widget/create_list.dart';
 import 'package:todo_app_list/widget/datepicker_widget.dart';
 import 'package:todo_app_list/widget/search_widget_build.dart';
-import 'package:todo_app_list/widget/task_card_list.dart';
 import 'package:todo_app_list/widget/top_bar.dart';
 
 class Homepage extends StatefulWidget {
-  const Homepage({super.key});
+  const Homepage({Key? key}) : super(key: key);
 
   @override
   State<Homepage> createState() => _HomepageState();
@@ -24,7 +19,6 @@ class _HomepageState extends State<Homepage> {
   String _searchQuery = '';
   String _selectedDate = "";
   PageController controller = PageController(initialPage: 0);
-  var selectedPage = 0;
   String formattedDate = "";
 
   Stream<List<TaskModel>> _filterTaskStream = Stream.value([]);
@@ -43,9 +37,9 @@ class _HomepageState extends State<Homepage> {
 
       formattedDate =
           DateFormat('E, MMM d').format(DateFormat.yMd().parse(date));
-      print(formattedDate);
     });
     refreshTaskList();
+    // "Wed 27.09.2023"
   }
 
   void refreshTaskList() {
@@ -57,6 +51,14 @@ class _HomepageState extends State<Homepage> {
   void initState() {
     super.initState();
     this.refreshTaskList();
+
+    setState(() {
+      if (formattedDate.isEmpty) {
+        DateTime initailizeDatetime = DateTime.now();
+        String selectedDate = DateFormat('E, MMM d').format(initailizeDatetime);
+        formattedDate = selectedDate;
+      }
+    });
   }
 
   void dispose() {
@@ -68,7 +70,7 @@ class _HomepageState extends State<Homepage> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBody: true,
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: PageView(
         controller: controller,
         children: [
@@ -79,18 +81,20 @@ class _HomepageState extends State<Homepage> {
                   Container(
                     color: Colors.grey.shade300.withOpacity(0.5),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      // crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
                           width: double.infinity,
                           height: 180,
                           padding: EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 15.0),
+                            horizontal: 12,
+                            vertical: 15.0,
+                          ),
                           decoration: BoxDecoration(
-                            color: Colors.deepPurple,
+                            color: ColorConstants.primary,
                             borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(38),
-                              bottomRight: Radius.circular(38),
+                              bottomLeft: Radius.circular(44),
+                              // bottomRight: Radius.circular(38),
                             ),
                           ),
                           child: Column(
@@ -98,10 +102,16 @@ class _HomepageState extends State<Homepage> {
                             children: [
                               Row(
                                 children: [
-                                  Expanded(child: TopBarBuild()),
+                                  Expanded(
+                                    child: TopBarBuild(
+                                      formattedDate: formattedDate,
+                                    ),
+                                  ),
+                                  SizedBox(width: 8),
                                   Container(
-                                      child: DatePickerWidget(
-                                          _updateSelectedDate)),
+                                    child:
+                                        DatePickerWidget(_updateSelectedDate),
+                                  ),
                                 ],
                               ),
                               SizedBox(height: 20),
@@ -115,29 +125,31 @@ class _HomepageState extends State<Homepage> {
                           ),
                         ),
                         SizedBox(height: 8),
-                        Column(
-                          children: [
-                            Container(
-                              padding: EdgeInsets.symmetric(vertical: 10),
-                              child: Center(
-                                child: Text(
-                                  formattedDate,
-                                  style: TextStyle(
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.bold,
-                                    color: ColorConstants.primary,
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(54),
+                              topRight: Radius.circular(54),
+                            ),
+                          ),
+                          padding: EdgeInsets.only(
+                            bottom: MediaQuery.of(context).viewInsets.bottom,
+                          ),
+                          margin: EdgeInsets.symmetric(vertical: 12),
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.symmetric(vertical: 20),
+                                  height: 500,
+                                  child: CardWidgetBuild(
+                                    tasksStream: _filterTaskStream,
                                   ),
                                 ),
-                              ),
+                              ],
                             ),
-                            Container(
-                              height: 500,
-                              margin: EdgeInsets.symmetric(vertical: 12),
-                              child: CardWidgetBuild(
-                                tasksStream: _filterTaskStream,
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
                       ],
                     ),
@@ -145,40 +157,6 @@ class _HomepageState extends State<Homepage> {
                 ],
               ),
             ),
-          ),
-        ],
-      ),
-      bottomNavigationBar: BottomBar(
-        textStyle: TextStyle(fontWeight: FontWeight.bold),
-        selectedIndex: selectedPage,
-        onTap: (int index) {
-          controller.jumpToPage(index);
-          setState(() => selectedPage = index);
-        },
-        items: <BottomBarItem>[
-          BottomBarItem(
-            icon: Icon(Icons.home),
-            title: Text('Home'),
-            activeColor: ColorConstants.primary,
-            activeTitleColor: ColorConstants.primary,
-          ),
-          BottomBarItem(
-            icon: Icon(Icons.favorite),
-            title: Text('Favorites'),
-            activeColor: ColorConstants.primary,
-            activeTitleColor: ColorConstants.primary,
-          ),
-          BottomBarItem(
-            icon: Icon(Icons.person),
-            title: Text('Account'),
-            activeColor: ColorConstants.primary,
-            activeTitleColor: ColorConstants.primary,
-          ),
-          BottomBarItem(
-            icon: Icon(Icons.settings),
-            title: Text('Settings'),
-            activeColor: ColorConstants.primary,
-            activeTitleColor: ColorConstants.primary,
           ),
         ],
       ),

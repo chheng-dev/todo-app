@@ -8,6 +8,7 @@ class TextFielddBuild extends StatelessWidget {
     required this.controller,
     required this.suffixIcon,
     required this.readOnly,
+    required this.keyboardType,
   }) : super(key: key);
 
   final String hitText;
@@ -15,6 +16,7 @@ class TextFielddBuild extends StatelessWidget {
   final TextEditingController controller;
   final Icon suffixIcon;
   final bool readOnly;
+  final TextInputType keyboardType;
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +28,7 @@ class TextFielddBuild extends StatelessWidget {
           style: TextStyle(
             fontWeight: FontWeight.w500,
             fontSize: 18,
+            fontFamily: "KantumruyPro",
           ),
         ),
         SizedBox(height: 8.0),
@@ -36,11 +39,13 @@ class TextFielddBuild extends StatelessWidget {
             borderRadius: BorderRadius.circular(8),
           ),
           child: TextField(
+            keyboardType: keyboardType,
             controller: controller,
             decoration: InputDecoration(
               enabledBorder: InputBorder.none,
               focusedBorder: InputBorder.none,
               hintText: hitText,
+
               // suffixIcon: suffixIcon,
             ),
             readOnly: readOnly,

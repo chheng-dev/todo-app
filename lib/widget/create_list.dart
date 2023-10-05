@@ -1,5 +1,6 @@
 import 'package:alert_dialog/alert_dialog.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:todo_app_list/models/task.dart';
@@ -15,7 +16,7 @@ Future<void> main() async {
 }
 
 class CreateTodoList extends StatefulWidget {
-  const CreateTodoList({super.key});
+  const CreateTodoList({Key? key}) : super(key: key);
 
   @override
   State<CreateTodoList> createState() => _CreateTodoListState();
@@ -30,12 +31,19 @@ class _CreateTodoListState extends State<CreateTodoList> {
       child: Column(
         children: [
           Container(
-            child: InkWell(
-              onTap: () => ShowModalBottom(context),
-              child: Icon(
-                Icons.add,
-                color: Colors.white,
-                size: 30,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                elevation: 0,
+                backgroundColor: Colors.white,
+              ),
+              onPressed: () => ShowModalBottom(context),
+              child: Text(
+                "បង្កើត",
+                style: TextStyle(
+                  color: ColorConstants.primary,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: "KantumruyPro",
+                ),
               ),
             ),
           ),
@@ -69,8 +77,21 @@ class _CreateTodoListState extends State<CreateTodoList> {
               bottom: MediaQuery.of(context).viewInsets.bottom,
             ),
             child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border(
+                  bottom: BorderSide(
+                    width: 1.5,
+                    color: Colors.grey.shade400.withOpacity(0.5),
+                  ),
+                ),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(54),
+                  topRight: Radius.circular(54),
+                ),
+              ),
               width: double.infinity,
-              color: Colors.white,
+              // color: Colors.white,
               padding: EdgeInsets.symmetric(horizontal: 12),
               height: MediaQuery.sizeOf(context).height * 0.8,
               child: Column(
@@ -83,8 +104,9 @@ class _CreateTodoListState extends State<CreateTodoList> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "Create New Task",
+                          "បង្កើតកិច្ចការថ្មី",
                           style: TextStyle(
+                            fontFamily: 'KantumruyPro',
                             fontWeight: FontWeight.bold,
                             fontSize: 22,
                           ),
@@ -111,6 +133,7 @@ class _CreateTodoListState extends State<CreateTodoList> {
                     hitText: "បញ្ចូលឈ្មោះ",
                     controller: _titleController,
                     suffixIcon: Icon(Icons.abc),
+                    keyboardType: TextInputType.text,
                   ),
                   SizedBox(height: 8.0),
                   //delivery Type
@@ -120,6 +143,7 @@ class _CreateTodoListState extends State<CreateTodoList> {
                       Text(
                         "អ្នកដឹក",
                         style: TextStyle(
+                          fontFamily: 'KantumruyPro',
                           fontWeight: FontWeight.w500,
                           fontSize: 18,
                         ),
@@ -155,6 +179,7 @@ class _CreateTodoListState extends State<CreateTodoList> {
                     hitText: "បញ្ចូលប្រភេទទីតាំង",
                     controller: _toLocationController,
                     suffixIcon: Icon(Icons.description),
+                    keyboardType: TextInputType.text,
                   ),
                   SizedBox(height: 8.0),
                   Row(
@@ -166,6 +191,7 @@ class _CreateTodoListState extends State<CreateTodoList> {
                           hitText: "បញ្ចូលតម្លៃ",
                           controller: _amountController,
                           suffixIcon: Icon(Icons.description),
+                          keyboardType: TextInputType.number,
                         ),
                       ),
                       SizedBox(width: 6.0),
@@ -178,6 +204,7 @@ class _CreateTodoListState extends State<CreateTodoList> {
                             Text(
                               "ស្ថានភាព",
                               style: TextStyle(
+                                fontFamily: 'KantumruyPro',
                                 fontWeight: FontWeight.w500,
                                 fontSize: 18,
                               ),
@@ -222,6 +249,7 @@ class _CreateTodoListState extends State<CreateTodoList> {
                             Text(
                               "បង់តាមរយ",
                               style: TextStyle(
+                                fontFamily: 'KantumruyPro',
                                 fontWeight: FontWeight.w500,
                                 fontSize: 18,
                               ),
@@ -244,7 +272,12 @@ class _CreateTodoListState extends State<CreateTodoList> {
                               ].map((String value) {
                                 return DropdownMenuItem<String>(
                                   value: value,
-                                  child: Text(value),
+                                  child: Text(
+                                    value,
+                                    style: TextStyle(
+                                      fontFamily: 'KantumruyPro',
+                                    ),
+                                  ),
                                 );
                               }).toList(),
                               onChanged: (String? value) {
@@ -264,6 +297,7 @@ class _CreateTodoListState extends State<CreateTodoList> {
                             Text(
                               "នៅថ្ថៃ",
                               style: TextStyle(
+                                fontFamily: 'KantumruyPro',
                                 fontWeight: FontWeight.w500,
                                 fontSize: 18,
                               ),
@@ -332,7 +366,13 @@ class _CreateTodoListState extends State<CreateTodoList> {
                                 borderRadius: BorderRadius.circular(8),
                               ),
                             ),
-                            child: Text("បោះបង់"),
+                            child: Text(
+                              "បោះបង់",
+                              style: TextStyle(
+                                fontFamily: "KantumruyPro",
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
                             onPressed: () {
                               _titleController.clear();
                               _noteController.clear();
@@ -358,7 +398,13 @@ class _CreateTodoListState extends State<CreateTodoList> {
                                 borderRadius: BorderRadius.circular(8),
                               ),
                             ),
-                            child: const Text("បន្ថែម"),
+                            child: const Text(
+                              "បន្ថែម",
+                              style: TextStyle(
+                                fontFamily: "KantumruyPro",
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
                             onPressed: () async {
                               double amount =
                                   double.tryParse(_amountController.text) ??
